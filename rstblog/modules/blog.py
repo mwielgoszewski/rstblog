@@ -163,10 +163,22 @@ def write_feed(builder):
         f.write(feed.to_string().encode('utf-8') + '\n')
 
 
+def write_sitemap(builder):
+    url = builder.config.root_get('canonical_url') or 'http://localhost/'
+
+    sitemap = []
+    for entry in get_all_entries(builder):
+        sitemap.append(urljoin(url, entry.slug) + '/')
+
+    with builder.open_link_file('sitemap_url') as f:
+        f.write('\n'.join(sitemap).encode('utf-8') + '\n')
+
+
 def write_blog_files(builder):
     write_index_page(builder)
     write_archive_pages(builder)
     write_feed(builder)
+    write_sitemap(builder)
 
 
 def setup(builder):
@@ -186,6 +198,8 @@ def setup(builder):
                          config_default='/<year>/<month>/')
     builder.register_url('blog_feed', config_key='modules.blog.feed_url',
                          config_default='/feed.atom')
+    builder.register_url('sitemap_url', config_key='modules.blog.sitemap_url',
+                         config_default='/_sitemap.html')
     builder.jinja_env.globals.update(
         get_recent_blog_entries=get_recent_blog_entries
     )
