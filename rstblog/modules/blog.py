@@ -92,6 +92,7 @@ def get_all_entries(builder):
     return result
 
 
+@contextfunction
 def get_archive_summary(builder):
     """Returns a summary of the stuff in the archives."""
     storage = builder.get_storage('blog')
@@ -201,5 +202,6 @@ def setup(builder):
     builder.register_url('sitemap_url', config_key='modules.blog.sitemap_url',
                          config_default='/_sitemap.html')
     builder.jinja_env.globals.update(
-        get_recent_blog_entries=get_recent_blog_entries
+        get_recent_blog_entries=get_recent_blog_entries,
+        get_archive_summary=get_archive_summary,
     )
